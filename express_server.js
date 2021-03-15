@@ -7,9 +7,13 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com"
 };
 
+// set the view engine to ejs
+app.set('view engine', 'ejs');
+
 app.get("/", (req, res) => {
   res.send("Hello!");
 });
+
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
 });
