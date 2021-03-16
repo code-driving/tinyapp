@@ -26,29 +26,43 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  //SAVE TO A DATABASE
-  //update shortURL
+  //update shortURL with a generated value
   const shortURL = generateRandomString(6);
   //update longURL
   const newLongURL = req.body.longURL;
   urlDatabase[shortURL] = newLongURL;
-  console.log(newLongURL)
+  //redirect the client to the short url page
   res.redirect(`/urls/${shortURL}`);
 });
 
 app.get("/u/:shortURL", (req, res) => {
+  //get the value of the shortURL from req.params
   const shortURL = req.params.shortURL;
+  //retrieve the value of the longURL from the database object
   const longURL = urlDatabase[shortURL];
+  //redirect the client to the longURL webpage 
   res.redirect(longURL);
 });
 
 app.get("/urls/:shortURL", (req, res) => {
+  //create templateVars
   const templateVars = {
     shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL],
   };
   res.render("urls_show", templateVars);
 });
+
+//delete URLs
+app.post('/urls/:shortURL/delete', (req, res) => {
+  //get the value of the shortURL  from req.params
+  const shortURLid = req.params.shortURL;
+  //delete it from the database
+  delete urlDatabase[shortURLid];
+  //redirect the client to the urls_index page
+  res.redirect("/urls");
+});
+
 
 function generateRandomString(urlLength) {
   //create a data (string) to hold the result
