@@ -3,6 +3,7 @@ const app = express();
 const PORT = 8080; // default port 8080
 const { generateRandomString } = require("./helpers");
 const bodyParser = require("body-parser");
+const { render } = require("ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // set the view engine to ejs
@@ -65,24 +66,39 @@ app.post('/urls/:shortURL/delete', (req, res) => {
   res.redirect("/urls");
 });
 
+//update a URL recourse
+app.post('/urls/:shortURL', (req, res) => {
+  //get the value of the id from req.params
+  const shortURL = req.params.shortURL;
+  //get the value of longURL from the input from req.body
+  const longURL = req.body.longURL;
+  console.log(longURL)
+  //update the url in the database
+  updateURL(shortURL, longURL);
+  //redirect the client to the urls_index page
+  res.redirect("/urls");
+});
 
-// function generateRandomString(urlLength) {
-//   //create a data (string) to hold the result
-//   //create a variable. holding letters, numbers
-//   //Math..floor, Math.random()
-//   //loop until char <= 6
-//   //add to a string
-//   let result = "";
-//   let characters =
-//     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-//   for (let i = 0; i < urlLength; i++) {
-//     result += characters.charAt(
-//       Math.floor(Math.random() * characters.length + 1)
-//     );
-//   }
-//   return result;
-// };
+app.get('/urls/:id', (req, res) => {
+const id = req.params.id;
+const longURL = req.body.longURL;
+render('urls_show', { id: longURL });
+});
 
+
+//display the updated form
+// app.get('urls/:id/update', (req, res) => {
+//   //get the value of the id from req.params
+//   const id = req.params.id
+//   const updatedValue = urlDatabase[id]
+//   const templateVars = { updatedValue: updatedValue}
+  
+//   res.render()
+// })
+
+function updateURL(id, newValue) {
+  urlDatabase[id] = newValue;
+};
 
 
 app.listen(PORT, () => {
