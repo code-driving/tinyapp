@@ -1,4 +1,9 @@
-function generateRandomString(urlLength) {
+const urlDatabase = {
+  "b2xVn2": "http://www.lighthouselabs.ca",
+  "9sm5xK": "http://www.google.com",
+};
+
+const generateRandomString = urlLength => {
   //create a data (string) to hold the result
   //create a variable. holding letters, numbers
   //Math..floor, Math.random()
@@ -15,4 +20,8 @@ function generateRandomString(urlLength) {
   return result;
 };
 
-module.exports = { generateRandomString} ;
+const updateURL = (id, newValue) => {
+  urlDatabase[id] = newValue;
+};
+
+module.exports = { generateRandomString, updateURL, urlDatabase } ;
