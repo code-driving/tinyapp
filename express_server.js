@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
+const { generateRandomString } = require("./helpers");
 const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: true }));
 
@@ -65,22 +66,24 @@ app.post('/urls/:shortURL/delete', (req, res) => {
 });
 
 
-function generateRandomString(urlLength) {
-  //create a data (string) to hold the result
-  //create a variable. holding letters, numbers
-  //Math..floor, Math.random()
-  //loop until char <= 6
-  //add to a string
-  let result = "";
-  let characters =
-    "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  for (let i = 0; i < urlLength; i++) {
-    result += characters.charAt(
-      Math.floor(Math.random() * characters.length + 1)
-    );
-  }
-  return result;
-};
+// function generateRandomString(urlLength) {
+//   //create a data (string) to hold the result
+//   //create a variable. holding letters, numbers
+//   //Math..floor, Math.random()
+//   //loop until char <= 6
+//   //add to a string
+//   let result = "";
+//   let characters =
+//     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+//   for (let i = 0; i < urlLength; i++) {
+//     result += characters.charAt(
+//       Math.floor(Math.random() * characters.length + 1)
+//     );
+//   }
+//   return result;
+// };
+
+
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}!`);
