@@ -26,12 +26,21 @@ app.get("/urls/new", (req, res) => {
 });
 
 app.post("/urls", (req, res) => {
-  //SAVE TO A DATABASE???
+  //SAVE TO A DATABASE
+  //update shortURL
+  const shortURL = generateRandomString(6);
+  //update longURL
+  const newLongURL = req.body.longURL;
+  urlDatabase[shortURL] = newLongURL;
+  console.log(newLongURL)
+  // console.log(shortURL);
+  // console.log(newLongURL);//lighthouse.ca;
   res.redirect(`/urls/:${shortURL}`);
 });
 
 app.get("/u/:shortURL", (req, res) => {
-  // const longURL = ...
+  const shortURL = req.params.shortURL;
+  const longURL = urlDatabase[shortURL];
   res.redirect(longURL);
 });
 
