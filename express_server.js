@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
-const { generateRandomString } = require("./helpers");
+const { generateRandomString, updateURL, urlDatabase } = require("./helpers");
 const bodyParser = require("body-parser");
 const { render } = require("ejs");
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -9,10 +9,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 // set the view engine to ejs
 app.set("view engine", "ejs");
 
-const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com",
-};
+// const urlDatabase = {
+//   "b2xVn2": "http://www.lighthouselabs.ca",
+//   "9sm5xK": "http://www.google.com",
+// };
 
 app.get("/", (req, res) => {
   res.send("Hello!");
@@ -92,13 +92,12 @@ render('urls_show', { id: longURL });
 //   const id = req.params.id
 //   const updatedValue = urlDatabase[id]
 //   const templateVars = { updatedValue: updatedValue}
-  
 //   res.render()
 // })
 
-function updateURL(id, newValue) {
-  urlDatabase[id] = newValue;
-};
+// function updateURL(id, newValue) {
+//   urlDatabase[id] = newValue;
+// };
 
 
 app.listen(PORT, () => {
