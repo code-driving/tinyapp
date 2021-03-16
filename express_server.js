@@ -56,9 +56,10 @@ app.get("/urls/:shortURL", (req, res) => {
 //delete URLs
 app.post('/urls/:shortURL/delete', (req, res) => {
   //get the value of the shortURL  from req.params
-  const shortURLid = req.params.shortURL;
+  const shortURL = req.params.shortURL;
+  console.log(shortURL)
   //delete it from the database
-  delete urlDatabase[shortURLid];
+  delete urlDatabase[shortURL];
   //redirect the client to the urls_index page
   res.redirect("/urls");
 });
