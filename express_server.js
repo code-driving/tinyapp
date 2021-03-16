@@ -33,9 +33,7 @@ app.post("/urls", (req, res) => {
   const newLongURL = req.body.longURL;
   urlDatabase[shortURL] = newLongURL;
   console.log(newLongURL)
-  // console.log(shortURL);
-  // console.log(newLongURL);//lighthouse.ca;
-  res.redirect(`/urls/:${shortURL}`);
+  res.redirect(`/urls/${shortURL}`);
 });
 
 app.get("/u/:shortURL", (req, res) => {
