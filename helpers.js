@@ -19,7 +19,7 @@ const updateURL = (id, newValue) => {
 const checkUserByEmail = (email) => {
   //loop through the users object and check if the email provided in the form corresponds to the email in the database
   for (let userId in users) {
-    const currentUser = users(userId);
+    const currentUser = users[userId];
     if (currentUser.email === email) {
       return currentUser;
     }
@@ -39,17 +39,17 @@ const authUserByEmailAndPassword = (email, password) => {
 };
 
 
-const createUser = () => {
+const createUser = (email, password) => {
   //generate random ID for new user
-  const newUserId = generateRandomString(10);
+  const id = generateRandomString(10);
   const newUser = {
     id,
     email,
     password
-  }
+  };
   //add new user to a database
-  users[newUserId] = newUser;
-  return newUserId;
+  users[id] = newUser;
+  return id;
 };
 
 module.exports = { generateRandomString, updateURL, checkUserByEmail, authUserByEmailAndPassword, createUser } ;
