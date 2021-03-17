@@ -3,7 +3,6 @@ const urlDatabase = {
   "9sm5xK": "http://www.google.com",
 };
 
-
 const users = {
   userRandomID: {
     id: "userRandomID",
@@ -16,8 +15,5 @@ const users = {
     password: "dishwasher-funk",
   },
 };
-
-const usersList = Object.values(users); //use this for app.get, easier to retrieve the values
-// console.log(usersList); 
 
 module.exports = { urlDatabase, users };
