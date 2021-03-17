@@ -16,56 +16,25 @@
       <div class="navbar-nav">
         <a class="nav-item nav-link" href="/urls">My URLs</a>
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
-      </div>
-      <% if (username) {%>
-        <form class="form-inline" action="/logout" method="POST">
-          <div class="form-group mb-2">
-            <p style="padding-right:20px;">Current user is already logged in as <%= username %></p></span>
-            <button type="submit" class="btn btn-primary">Logout</button>
-          </div>
-        </form>
-        <% } else { %>
-        <form class="form-inline" action="/login" method="POST">
-          <div class="form-group mb-2">
-            <label for="username">Enter username:</label>
-            <input
-              class="form-control"
-              type="text"
-              name="username"
-              value="<%= username %>"
-              style="width: 300px; margin: 1em"
-            />
-            <button type="submit" class="btn btn-primary">Login</button>
-          </div>
-        </form>
-        <% } %>
         
+        <ul class="nav-item nav-link">
+        <% if (user) { %>
+          <li>
+            <p>Hi, <%= user.email %></p>
+          </li>
+          <li>
+            <form action="/logout" method="post">
+              <button type="button" class="btn btn-warning">Logout</button>
+            </form>            
+          </li>
+          <% } else { %>
+            <li><a href="/login">Login</a></li>
+            <li><a href="/register">Register</a></li>
+        <% } %>
+        </ul>
+      </div>
     </div>
   </nav>
 </header>
 
-<!-- <% if (username) {%>
-<h5>Logout</h5>
-<form class="form-inline" action="/logout" method="POST">
-  <div class="form-group mb-2">
-    <p style="padding-right:20px;">Current user is already logged in as <%= username %></p></span>
-    <button type="submit" class="btn btn-primary">Logout</button>
-  </div>
-</form>
-<% } else { %>
 
-<h5>Login</h5>
-<form class="form-inline" action="/login" method="POST">
-  <div class="form-group mb-2">
-    <label for="username">Enter username:</label>
-    <input
-      class="form-control"
-      type="text"
-      name="username"
-      value="<%= username %>"
-      style="width: 300px; margin: 1em"
-    />
-    <button type="submit" class="btn btn-primary">Submit</button>
-  </div>
-</form>
-<% } %> -->
