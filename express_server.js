@@ -22,6 +22,40 @@ const {
 //import databases
 const { urlDatabase, usersList, users } = require("./constants");
 
+
+//show the login page
+app.get("/login", (req, res) => {
+  const newUserId = req.cookies["user_id"];
+  const user = users[newUserId];
+  const templateVars = { user };
+  res.render("login_page", templateVars);
+})
+
+//create login handler
+app.post("/login", (req, res) => {
+   //extract the information from the form
+  const { email, password } = req.body;
+  //perform the authentication of the user
+  const user = authUserByEmailAndPassword(email, password)
+  if (email === "") {
+    res.status(400).send("Error: Please enter your email");
+  }
+  if (password === "") {
+    res.status(400).send("Error: Please enter your password");
+  }
+  if (!user) {
+    res.status(403).send("The user with the provided email or password cannot be found. Please try again.");
+  }
+  res.cookie('user_id', user.id);
+  res.redirect('/urls');
+});
+
+app.post("/logout", (req, res) => {
+  res.clearCookie("user_id");
+  res.redirect("/urls");
+});
+
+
 //show the register page
 app.get("/register", (req, res) => {
   const newUserId = req.cookies["user_id"];
