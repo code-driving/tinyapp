@@ -50,12 +50,6 @@ app.post("/login", (req, res) => {
   res.redirect('/urls');
 });
 
-app.post("/logout", (req, res) => {
-  res.clearCookie("user_id");
-  res.redirect("/urls");
-});
-
-
 //show the register page
 app.get("/register", (req, res) => {
   const newUserId = req.cookies["user_id"];
@@ -85,22 +79,12 @@ app.post("/register", (req, res) => {
   res.cookie("user_id", newUserId);
   res.redirect("/urls");
 });
-// //create registration handler
-// app.post("/register", (req, res) => {
-//   //extract the information from the form
-//   const { email, password } = req.body;
-//   //check by email if the user already exists
-//   const userExists = checkUserByEmail(email);
-//   //if the user was not found => create a new one
-//   if (!userExists) {
-//     const newUserId = createUser(email, password);
-//     //set cookie
-//     res.cookie("user_id", newUserId);
-//     res.redirect("/urls");
-//   } else {
-//     res.status(400).send('This username is already registered');
-//   }
-// });
+
+
+app.post("/logout", (req, res) => {
+  res.clearCookie("user_id");
+  res.redirect("/urls");
+});
 
 app.get("/urls", (req, res) => {
   const newUserId = req.cookies["user_id"];
@@ -159,7 +143,6 @@ app.get("/urls/:shortURL", (req, res) => {
 app.post("/urls/:shortURL/delete", (req, res) => {
   //get the value of the shortURL  from req.params
   const shortURL = req.params.shortURL;
-  console.log(shortURL);
   //delete it from the database
   delete urlDatabase[shortURL];
   //redirect the client to the urls_index page
@@ -177,19 +160,6 @@ app.post("/urls/:shortURL", (req, res) => {
   //redirect the client to the urls_index page
   res.redirect("/urls");
 });
-
-// app.get('/urls/:id', (req, res) => {
-// const id = req.params.id;
-// const longURL = req.body.longURL;
-// render('urls_show', { id: longURL });
-// });
-
-// app.post('/login', (req, res) => {
-//   const usernameValue = req.body.username;
-//   res.cookie('username', usernameValue);
-//   console.log(usernameValue)
-//   res.redirect('/urls')
-// });
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}!`);
