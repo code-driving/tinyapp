@@ -4,11 +4,6 @@ const urlDatabase = {
 };
 
 const generateRandomString = urlLength => {
-  //create a data (string) to hold the result
-  //create a variable. holding letters, numbers
-  //Math..floor, Math.random()
-  //loop until char <= 6
-  //add to a string
   let result = "";
   let characters =
     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
