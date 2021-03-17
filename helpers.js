@@ -1,7 +1,4 @@
-const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com",
-};
+const { urlDatabase, usersList, users } = require("./constants");
 
 const generateRandomString = urlLength => {
   let result = "";
@@ -19,4 +16,40 @@ const updateURL = (id, newValue) => {
   urlDatabase[id] = newValue;
 };
 
-module.exports = { generateRandomString, updateURL, urlDatabase } ;
+const checkUserByEmail = (email) => {
+  //loop through the users object and check if the email provided in the form corresponds to the email in the database
+  for (let userId in users) {
+    const currentUser = users[userId];
+    if (currentUser.email === email) {
+      return currentUser;
+    }
+  }
+  return false;
+};
+
+const authUserByEmailAndPassword = (email, password) => {
+  //fetch an user with existing registered email
+  //check if the user exists &&
+  //check if the the password of the found user in the database corresponds to the password provided in the form
+  const currentUser = checkUserByEmail(email);
+  if (currentUser && currentUser.password === password) {
+    return currentUser;
+  }
+  return false;
+};
+
+
+const createUser = (email, password) => {
+  //generate random ID for new user
+  const id = generateRandomString(10);
+  const newUser = {
+    id,
+    email,
+    password
+  };
+  //add new user to a database
+  users[id] = newUser;
+  return id;
+};
+
+module.exports = { generateRandomString, updateURL, checkUserByEmail, authUserByEmailAndPassword, createUser } ;
