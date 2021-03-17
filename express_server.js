@@ -11,20 +11,19 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 
 const { generateRandomString, updateURL, urlDatabase } = require("./helpers");
-// const urlDatabase = {
-//   "b2xVn2": "http://www.lighthouselabs.ca",
-//   "9sm5xK": "http://www.google.com",
-// };
+
 
 app.get("/urls", (req, res) => {
-  const templateVars = { urls: urlDatabase };
+  const templateVars = { urls: urlDatabase, username: req.cookies["username"] };
   res.render("urls_index", templateVars);
 });
 
+//show the url submission form
 app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
 
+//receive the form submission
 app.post("/urls", (req, res) => {
   //update shortURL with a generated value
   const shortURL = generateRandomString(6);
@@ -70,7 +69,6 @@ app.post('/urls/:shortURL', (req, res) => {
   const shortURL = req.params.shortURL;
   //get the value of longURL from the input from req.body
   const longURL = req.body.longURL;
-  console.log(longURL)
   //update the url in the database
   updateURL(shortURL, longURL);
   //redirect the client to the urls_index page
@@ -83,13 +81,23 @@ const longURL = req.body.longURL;
 render('urls_show', { id: longURL });
 });
 
-app.post('/login', (req, res) => {
-  const usernameValue = req.body.username;
-  res.cookie('username', usernameValue);
-  console.log(usernameValue)
-  res.redirect('/urls')
-});
+// app.post('/login', (req, res) => {
+//   const usernameValue = req.body.username;
+//   res.cookie('username', usernameValue);
+//   console.log(usernameValue)
+//   res.redirect('/urls')
+// });
 
+//logout 
+// app.post("/logout", (req, res) => {
+//   const templateVars = { urls: urlDatabase, username: req.cookies["username"] };
+//   let username = req.body.username;
+//   if (username = templateVars[username]) {
+//     res.clearCookie(username);
+//   }
+//   console.log(username)
+//   res.redirect('/urls');
+// });
 //display the updated form
 // app.get('urls/:id/update', (req, res) => {
 //   //get the value of the id from req.params
