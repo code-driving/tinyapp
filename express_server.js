@@ -11,15 +11,20 @@ app.use(express.static("public"));
 // set the view engine to ejs
 app.set("view engine", "ejs");
 
-//import the helper functions 
-const { generateRandomString, updateURL, checkUserByEmail, authUserByEmailAndPassword, createUser } = require("./helpers");
+//import the helper functions
+const {
+  generateRandomString,
+  updateURL,
+  checkUserByEmail,
+  authUserByEmailAndPassword,
+  createUser,
+} = require("./helpers");
 //import databases
 const { urlDatabase, usersList, users } = require("./constants");
 
-
 //show the register page
 app.get("/register", (req, res) => {
-  const newUserId = req.cookies['user_id'];
+  const newUserId = req.cookies["user_id"];
   const user = users[newUserId];
   const templateVars = { user };
   res.render("registration_page", templateVars);
@@ -27,30 +32,46 @@ app.get("/register", (req, res) => {
 
 //create registration handler
 app.post("/register", (req, res) => {
-  //extract the information from the form 
+  //extract the information from the form
   const { email, password } = req.body;
-  //check by email if the user already exists 
+  //check by email if the user already exists
   const userExists = checkUserByEmail(email);
   //if the user was not found => create a new one
-  if (!userExists) {
-    const newUserId = createUser(email, password);
-    //set cookie
-    res.cookie("user_id", newUserId);
-    console.log(newUserId);
-    console.log(users)
-    res.redirect("/urls");
-  } else {
-    res.status(400).send('This username is already registered');
+  if (email === "") {
+    res.status(400).send("Error: Please enter your email");
   }
+  if (password === "") {
+    res.status(400).send("Error: Please enter your password");
+  }
+  if (userExists) {
+    res.status(400).send("This username is already registered");
+  }
+  const newUserId = createUser(email, password);
+  //set cookie
+  res.cookie("user_id", newUserId);
+  res.redirect("/urls");
 });
-
-
-
+// //create registration handler
+// app.post("/register", (req, res) => {
+//   //extract the information from the form
+//   const { email, password } = req.body;
+//   //check by email if the user already exists
+//   const userExists = checkUserByEmail(email);
+//   //if the user was not found => create a new one
+//   if (!userExists) {
+//     const newUserId = createUser(email, password);
+//     //set cookie
+//     res.cookie("user_id", newUserId);
+//     res.redirect("/urls");
+//   } else {
+//     res.status(400).send('This username is already registered');
+//   }
+// });
 
 app.get("/urls", (req, res) => {
-  const newUserId = req.cookies['user_id'];
+  const newUserId = req.cookies["user_id"];
   const user = users[newUserId];
-  const templateVars = { urls: urlDatabase, user};
+  const templateVars = { urls: urlDatabase, user };
   res.render("urls_index", templateVars);
   //check if the user is logged in
   // if (newUserId) {
@@ -62,7 +83,7 @@ app.get("/urls", (req, res) => {
 
 //show the url submission form
 app.get("/urls/new", (req, res) => {
-  const newUserId = req.cookies['user_id'];
+  const newUserId = req.cookies["user_id"];
   const user = users[newUserId];
   const templateVars = { user };
   res.render("urls_new", templateVars);
@@ -89,13 +110,13 @@ app.get("/u/:shortURL", (req, res) => {
 });
 
 app.get("/urls/:shortURL", (req, res) => {
-  const newUserId = req.cookies['user_id'];
+  const newUserId = req.cookies["user_id"];
   const user = users[newUserId];
   //create templateVars
   const templateVars = {
     shortURL: req.params.shortURL,
     longURL: urlDatabase[req.params.shortURL],
-    user
+    user,
   };
   res.render("urls_show", templateVars);
 });
@@ -128,7 +149,6 @@ app.post("/urls/:shortURL", (req, res) => {
 // const longURL = req.body.longURL;
 // render('urls_show', { id: longURL });
 // });
-
 
 // app.post('/login', (req, res) => {
 //   const usernameValue = req.body.username;
