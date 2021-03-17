@@ -6,11 +6,13 @@ const cookieParser = require('cookie-parser')
 const { render } = require("ejs");
 app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static('public'));
 
 // set the view engine to ejs
 app.set("view engine", "ejs");
 
-const { generateRandomString, updateURL, urlDatabase } = require("./helpers");
+const { generateRandomString, updateURL } = require("./helpers");
+const { urlDatabase, usersList } = require("./constants");
 
 
 app.get("/urls", (req, res) => {
@@ -75,12 +77,15 @@ app.post('/urls/:shortURL', (req, res) => {
   res.redirect("/urls");
 });
 
-app.get('/urls/:id', (req, res) => {
-const id = req.params.id;
-const longURL = req.body.longURL;
-render('urls_show', { id: longURL });
-});
+// app.get('/urls/:id', (req, res) => {
+// const id = req.params.id;
+// const longURL = req.body.longURL;
+// render('urls_show', { id: longURL });
+// });
 
+app.get('/register', (req, res) => {
+  res.render('registration_page')
+})
 // app.post('/login', (req, res) => {
 //   const usernameValue = req.body.username;
 //   res.cookie('username', usernameValue);
