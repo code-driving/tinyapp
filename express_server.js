@@ -22,21 +22,29 @@ const {
 //import databases
 const { urlDatabase, usersList, users } = require("./constants");
 
-
+app.get("/", (req, res) => {
+  const newUserId = req.cookies["user_id"];
+  const user = users[newUserId];
+  if (user) {
+    res.redirect("/urls");
+    return;
+  }
+  res.redirect("/login");
+});
 //show the login page
 app.get("/login", (req, res) => {
   const newUserId = req.cookies["user_id"];
   const user = users[newUserId];
   const templateVars = { user };
   res.render("login_page", templateVars);
-})
+});
 
 //create login handler
 app.post("/login", (req, res) => {
-   //extract the information from the form
+  //extract the information from the form
   const { email, password } = req.body;
   //perform the authentication of the user
-  const user = authUserByEmailAndPassword(email, password)
+  const user = authUserByEmailAndPassword(email, password);
   if (email === "") {
     res.status(400).send("Error: Please enter your email");
   }
@@ -44,10 +52,14 @@ app.post("/login", (req, res) => {
     res.status(400).send("Error: Please enter your password");
   }
   if (!user) {
-    res.status(403).send("The user with the provided email or password cannot be found. Please try again.");
+    res
+      .status(403)
+      .send(
+        "The user with the provided email or password cannot be found. Please try again."
+      );
   }
-  res.cookie('user_id', user.id);
-  res.redirect('/urls');
+  res.cookie("user_id", user.id);
+  res.redirect("/urls");
 });
 
 //show the register page
@@ -80,7 +92,6 @@ app.post("/register", (req, res) => {
   res.redirect("/urls");
 });
 
-
 app.post("/logout", (req, res) => {
   res.clearCookie("user_id");
   res.redirect("/urls");
@@ -90,13 +101,12 @@ app.get("/urls", (req, res) => {
   const newUserId = req.cookies["user_id"];
   const user = users[newUserId];
   const templateVars = { urls: urlDatabase, user };
-  res.render("urls_index", templateVars);
-  //check if the user is logged in
-  // if (newUserId) {
-  //   res.render(res.render("urls_index", templateVars));
-  // } else {
-  //   res.status(401).send('Please login');
-  // }
+  // check if the user is logged in
+  if (newUserId) {
+    res.render("urls_index", templateVars);
+  } else {
+    res.status(401).send("Please login");
+  }
 });
 
 //show the url submission form
@@ -104,6 +114,10 @@ app.get("/urls/new", (req, res) => {
   const newUserId = req.cookies["user_id"];
   const user = users[newUserId];
   const templateVars = { user };
+  if (!user) {
+    res.redirect("/login");
+    return;
+  }
   res.render("urls_new", templateVars);
 });
 
