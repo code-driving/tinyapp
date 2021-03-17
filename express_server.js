@@ -1,22 +1,20 @@
 const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
-const { generateRandomString, updateURL, urlDatabase } = require("./helpers");
 const bodyParser = require("body-parser");
+const cookieParser = require('cookie-parser')
 const { render } = require("ejs");
+app.use(cookieParser())
 app.use(bodyParser.urlencoded({ extended: true }));
 
 // set the view engine to ejs
 app.set("view engine", "ejs");
 
+const { generateRandomString, updateURL, urlDatabase } = require("./helpers");
 // const urlDatabase = {
 //   "b2xVn2": "http://www.lighthouselabs.ca",
 //   "9sm5xK": "http://www.google.com",
 // };
-
-app.get("/", (req, res) => {
-  res.send("Hello!");
-});
 
 app.get("/urls", (req, res) => {
   const templateVars = { urls: urlDatabase };
@@ -85,6 +83,12 @@ const longURL = req.body.longURL;
 render('urls_show', { id: longURL });
 });
 
+app.post('/login', (req, res) => {
+  const usernameValue = req.body.username;
+  res.cookie('username', usernameValue);
+  console.log(usernameValue)
+  res.redirect('/urls')
+});
 
 //display the updated form
 // app.get('urls/:id/update', (req, res) => {
@@ -94,11 +98,6 @@ render('urls_show', { id: longURL });
 //   const templateVars = { updatedValue: updatedValue}
 //   res.render()
 // })
-
-// function updateURL(id, newValue) {
-//   urlDatabase[id] = newValue;
-// };
-
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}!`);
