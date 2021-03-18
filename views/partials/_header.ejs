@@ -1,5 +1,5 @@
-<header>
-  <nav class="navbar navbar-expand-md navbar-dark bg-success">
+<header class="wrapper">
+  <nav class="navbar navbar-expand-md navbar-dark nav_background">
     <a class="navbar-brand" href="/urls">TinyApp</a>
     <button
       class="navbar-toggler"
@@ -13,23 +13,31 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-      <div class="navbar-nav">
+      <div class="navbar-nav flex_items">
         <a class="nav-item nav-link" href="/urls">My URLs</a>
         <a class="nav-item nav-link" href="/urls/new">Create New URL</a>
 
-        <ul class="nav-item nav-link">
+        <ul class="nav-item nav-link flex_items">
           <% if (user) { %>
           <li>
-            <p>Logged In As <%= user.email %></p>
+            <p class="welcome_message">Logged In As <%= user.email %></p>
           </li>
           <li>
             <form action="/logout" method="post">
-              <input type="submit" value="Logout" class="btn btn-warning" />
+              <input type="submit" value="Logout" class="logout_btn" />
             </form>
           </li>
           <% } else { %>
-          <li><a href="/login" class="btn btn-success">Login</a></li>
-          <li><a href="/register" class="btn btn-success">Register</a></li>
+          <div class="login-register">
+            <li>
+              <a href="/login" class="btn btn-success login_btn">Login</a>
+            </li>
+            <li>
+              <a href="/register" class="btn btn-success register_btn"
+                >Register</a
+              >
+            </li>
+          </div>
           <% } %>
         </ul>
       </div>

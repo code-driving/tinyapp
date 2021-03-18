@@ -14,43 +14,45 @@
       integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="../public/styles.css">
+    <link rel="stylesheet" href="/styles.css" type="text/css" />
     <title>TinyApp</title>
   </head>
   <body>
-    <main style="margin: 1em">
+    <main>
       <%- include('partials/_header') %>
-      <h3>My URLs</h3>
-      <table class="table">
-        <thead>
-          <tr>
-            <th scope="col">Short URL</th>
-            <th scope="col">Long URL</th>
-            <th scope="col">Edit</th>
-            <th scope="col">Delete</th>
-          </tr>
-        </thead>
-        <tbody>
-          <% for(let url in urls) { %>
-          <tr>
-            <td><%= url %></td>
-            <td><%= urls[url].longURL %></td>
-            <td>
-              <!-- link to update url -->
-              <form method="GET" action="/urls/<%= url %>">
-                <button type="submit" class="btn btn-primary">Edit</button>
-              </form>
-            </td>
-            <td>
-              <!-- form to delete url -->
-              <form method="POST" action="/urls/<%= url %>/delete">
-                <button type="submit" class="btn btn-danger">Delete</button>
-              </form>
-            </td>
-          </tr>
-          <% } %>
-        </tbody>
-      </table>
+      <div class="wrapper container">
+        <h3>My URLs</h3>
+        <table class="table">
+          <thead>
+            <tr>
+              <th scope="col">Short URL</th>
+              <th scope="col">Long URL</th>
+              <th scope="col">Edit</th>
+              <th scope="col">Delete</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% for(let url in urls) { %>
+            <tr>
+              <td><%= url %></td>
+              <td><%= urls[url].longURL %></td>
+              <td>
+                <!-- link to update url -->
+                <form method="GET" action="/urls/<%= url %>">
+                  <button type="submit" class="btn btn-primary">Edit</button>
+                </form>
+              </td>
+              <td>
+                <!-- form to delete url -->
+                <form method="POST" action="/urls/<%= url %>/delete">
+                  <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+              </td>
+            </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
     </main>
     <!-- Bootstrap JS -->
     <script

@@ -14,26 +14,32 @@
       integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS"
       crossorigin="anonymous"
     />
-    <link rel="stylesheet" href="../public/styles.css">
+    <link rel="stylesheet" href="/styles.css" type="text/css" />
     <title>TinyApp</title>
   </head>
   <header>
-    <nav class="navbar navbar-expand-md navbar-dark bg-success">
+    <nav class="navbar navbar-expand-md navbar-dark nav_background">
       <a class="navbar-brand" href="/urls">TinyApp</a>
     </nav>
   </header>
-
   <body>
-    <main style="margin: 1em">
-      <!-- <%- include('partials/_header') %> -->
-      <section>
-      <h4>Oops! Error!</h4>
-      <p>Please go the designated page</p>
-      <ul>
-      <li><a href="/login">Please log in first</a></li>
-      <li><a href="/register">Please register first</a></li>
-      </ul>
-      </section>
+    <main>
+      <div class="wrapper container">
+        <section>
+          <h4>Oops! Error!</h4>
+          <p>Please go the designated page</p>
+          <ul>
+            <li>
+              <a href="/login" class="error_message">Please log in first</a>
+            </li>
+            <li>
+              <a href="/register" class="error_message"
+                >Please register first</a
+              >
+            </li>
+          </ul>
+        </section>
+      </div>
     </main>
     <!-- Bootstrap JS -->
     <script
