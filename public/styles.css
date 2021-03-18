@@ -18,12 +18,16 @@ ul li {
 body {
   overflow: hidden;
   background-color: rgb(99, 212, 212);
-  animation: happy-landing 1.2s ease-in;
+  /* animation: happy-landing 1s ease-in; */
 }
 .wrapper {
   max-width: 1300px;
   width: 100%;
   margin: 0 auto;
+}
+.container {
+  display: flex;
+  flex-direction: column;
 }
 
 .nav_background {
@@ -104,7 +108,7 @@ h3, h4 {
   margin-top: 2rem;
 }
 
-@keyframes happy-landing {
+/* @keyframes happy-landing {
   0% {
     opacity: 0;
   }
@@ -114,4 +118,4 @@ h3, h4 {
   100% {
     opacity: 1
   }
-}
+} */
