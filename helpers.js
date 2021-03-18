@@ -1,3 +1,5 @@
+const bcrypt = require('bcrypt');
+const saltRounds = 10;
 const { urlDatabase, users } = require("./constants");
 
 const generateRandomString = (urlLength) => {
@@ -40,12 +42,15 @@ const createUser = (email, password) => {
   const newUser = {
     id,
     email,
-    password,
+    password: bcrypt.hashSync(password, saltRounds)
   };
   //add new user to a database
   users[id] = newUser;
-  return id;
+  // console.log("newUser", newUser)
+  // console.log("users", users)
+  return newUser;
 };
+
 //return the URLs where the userID is equal to the id of the currently logged-in user
 const urlsForUser = (id, database) => {
   let usersOwnUrls = {};
@@ -68,5 +73,5 @@ module.exports = {
   authUserByEmailAndPassword,
   createUser,
   urlsForUser,
-  verifyID,
+  verifyID
 };
