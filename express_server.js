@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(
   cookieSession({
-    name: sessionStorage,
+    name: 'session',
     keys: ["user_id"],
   })
 );
