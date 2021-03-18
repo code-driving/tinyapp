@@ -14,7 +14,6 @@ app.set("view engine", "ejs");
 //import the helper functions
 const {
   generateRandomString,
-  updateURL,
   checkUserByEmail,
   authUserByEmailAndPassword,
   createUser,
@@ -208,11 +207,27 @@ app.post("/urls/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
   //get the value of longURL from the input from req.body
   const longURL = req.body.longURL;
+  //set cookies
+  const newUserId = req.cookies["user_id"];
+  const user = users[newUserId];
   //update the url in the database
-  updateURL(shortURL, longURL);
+  if (!verifyID(newUserId, shortURL, urlDatabase)) {
+    res.status(403).send('Unfortunately, this does not belong to you. You cannot update it.')
+  }
+  urlDatabase[shortURL]['longURL'] = longURL;
   //redirect the client to the urls_index page
   res.redirect("/urls");
 });
+// app.post("/urls/:shortURL", (req, res) => {
+//   //get the value of the id from req.params
+//   const shortURL = req.params.shortURL;
+//   //get the value of longURL from the input from req.body
+//   const longURL = req.body.longURL;
+//   //update the url in the database
+//   updateURL(shortURL, longURL);
+//   //redirect the client to the urls_index page
+//   res.redirect("/urls");
+// });
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}!`);
