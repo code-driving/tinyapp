@@ -18,9 +18,10 @@ const {
   checkUserByEmail,
   authUserByEmailAndPassword,
   createUser,
+  urlsForUser,
 } = require("./helpers");
 //import databases
-const { urlDatabase, usersList, users } = require("./constants");
+const { urlDatabase, users } = require("./constants");
 
 app.get("/", (req, res) => {
   const newUserId = req.cookies["user_id"];
@@ -45,6 +46,7 @@ app.post("/login", (req, res) => {
   const { email, password } = req.body;
   //perform the authentication of the user
   const user = authUserByEmailAndPassword(email, password);
+  const templateVars = { user: user };
   if (email === "") {
     res.status(400).send("Error: Please enter your email");
   }
@@ -52,11 +54,12 @@ app.post("/login", (req, res) => {
     res.status(400).send("Error: Please enter your password");
   }
   if (!user) {
-    res
-      .status(403)
-      .send(
-        "The user with the provided email or password cannot be found. Please try again."
-      );
+    // res
+    //   .status(403)
+    //   .send(
+    //     "The user with the provided email or password cannot be found. Please try again."
+    //   );
+    res.render("error", templateVars);
   }
   res.cookie("user_id", user.id);
   res.redirect("/urls");
@@ -100,14 +103,26 @@ app.post("/logout", (req, res) => {
 app.get("/urls", (req, res) => {
   const newUserId = req.cookies["user_id"];
   const user = users[newUserId];
-  const templateVars = { urls: urlDatabase, user };
+  const userUrls = urlsForUser(newUserId, urlDatabase);
+  const templateVars = { urls: userUrls, user: newUserId };
   // check if the user is logged in
-  if (newUserId) {
-    res.render("urls_index", templateVars);
+  if (!user) {
+    return res.render("error", templateVars);
   } else {
-    res.status(401).send("Please login");
+    res.render("urls_index", templateVars);
   }
 });
+// app.get("/urls", (req, res) => {
+//   const newUserId = req.cookies["user_id"];
+//   const user = users[newUserId];
+//   const templateVars = { urls: urlDatabase, user };
+//   // check if the user is logged in
+//   if (newUserId) {
+//     res.render("urls_index", templateVars);
+//   } else {
+//     res.render("error", templateVars);
+//   }
+// });
 
 //show the url submission form
 app.get("/urls/new", (req, res) => {
@@ -123,11 +138,17 @@ app.get("/urls/new", (req, res) => {
 
 //receive the form submission
 app.post("/urls", (req, res) => {
+  const newUserId = req.cookies["user_id"];
+  const user = users[newUserId];
+  if (!user) {
+    res.redirect("/login");
+    return;
+  }
   //update shortURL with a generated value
   const shortURL = generateRandomString(6);
   //update longURL
   const newLongURL = req.body.longURL;
-  urlDatabase[shortURL] = newLongURL;
+  urlDatabase[shortURL] = { longURL: newLongURL, userID: newUserId };
   //redirect the client to the short url page
   res.redirect(`/urls/${shortURL}`);
 });
@@ -136,9 +157,9 @@ app.get("/u/:shortURL", (req, res) => {
   //get the value of the shortURL from req.params
   const shortURL = req.params.shortURL;
   //retrieve the value of the longURL from the database object
-  const longURL = urlDatabase[shortURL];
+  const newLongURL = urlDatabase[shortURL].longURL;
   //redirect the client to the longURL webpage
-  res.redirect(longURL);
+  res.redirect(newLongURL);
 });
 
 app.get("/urls/:shortURL", (req, res) => {
