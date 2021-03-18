@@ -11,13 +11,14 @@ html { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: 
 /*variables*/
 :root {
   --button-color: #212529;
+  --button-hover-state: rgb(15, 67, 97);
 }
 ul li {
   list-style: none;
 }
 body {
   overflow: hidden;
-  background-color: rgb(99, 212, 212);
+  background-color: rgb(238, 236, 208);
   /* animation: happy-landing 1s ease-in; */
 }
 .wrapper {
@@ -31,7 +32,7 @@ body {
 }
 
 .nav_background {
-  background-color: rgb(197, 83, 102);
+  background-color: rgb(46, 45, 45);
 }
 .error_message {
   color: black;
@@ -54,7 +55,7 @@ a:focus,
 
 .logout_btn:hover,
 .logout_btn:focus {
-  background-color: rgb(15, 67, 97);
+  background-color: var(--button-hover-state);
   color:aliceblue;
 }
 
@@ -75,7 +76,7 @@ main {
   font-weight: 400;
   line-height: 1.5;
   color: var(--button-color);
-  background-color: rgb(238, 14, 70);
+  background-color: rgb(230, 213, 161);
   border: none;
   margin-left: 1rem;
 }
@@ -83,7 +84,7 @@ main {
 .login_btn:focus,
 .register_btn:hover,
 .register_btn:focus {
-  background-color: rgb(15, 67, 97);
+  background-color: var(--button-hover-state);
 }
 
 .login-register {
@@ -95,14 +96,14 @@ input[type="submit"] {
   padding: 10px;
   outline: none;
   border: none;
-  background-color: rgb(238, 14, 70);
+  background-color: rgb(230, 213, 161);
   font-weight: 400;
   margin-left: 7rem;
   border-radius: 10px;
 }
 
 .welcome_message {
-  color: var(--button-color);
+  color: aliceblue;
 }
 h3, h4 {
   margin-top: 2rem;
