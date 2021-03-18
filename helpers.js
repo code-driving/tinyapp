@@ -29,7 +29,7 @@ const authUserByEmailAndPassword = (email, password) => {
   //fetch an user with existing registered email
   //check if the user exists &&
   //check if the the password of the found user in the database corresponds to the password provided in the form
-  const currentUser = getUserByEmail(email, database);
+  const currentUser = getUserByEmail(email, users);
   if (currentUser && currentUser.password === password) {
     return currentUser;
   }
