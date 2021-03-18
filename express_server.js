@@ -19,6 +19,7 @@ const {
   authUserByEmailAndPassword,
   createUser,
   urlsForUser,
+  verifyID
 } = require("./helpers");
 //import databases
 const { urlDatabase, users } = require("./constants");
@@ -169,11 +170,9 @@ app.get("/urls/:shortURL", (req, res) => {
   const userUrls = urlsForUser(newUserId, urlDatabase);
   const shortURL = req.params.shortURL;
   const longURL = userUrls[shortURL]['longURL']
-  // console.log(longURL)
   const templateVars = {
     shortURL, longURL, user 
   };
-  console.log(templateVars)
   res.render("urls_show", templateVars);
 });
 // app.get("/urls/:shortURL", (req, res) => {
@@ -190,9 +189,14 @@ app.get("/urls/:shortURL", (req, res) => {
 
 //delete URLs
 app.post("/urls/:shortURL/delete", (req, res) => {
+  const newUserId = req.cookies["user_id"];
+  const user = users[newUserId];
   //get the value of the shortURL  from req.params
   const shortURL = req.params.shortURL;
-  //delete it from the database
+  //delete it from the user's urls
+  if (!verifyID(newUserId, shortURL, urlDatabase)) {
+    res.status(403).send('Unfortunately, this does not belong to you. You cannot delete it.')
+  }
   delete urlDatabase[shortURL];
   //redirect the client to the urls_index page
   res.redirect("/urls");
