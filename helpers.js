@@ -69,7 +69,7 @@ const verifyID = (userID, shortURL, database) => {
 
 module.exports = {
   generateRandomString,
-  checkUserByEmail,
+  getUserByEmail,
   authUserByEmailAndPassword,
   createUser,
   urlsForUser,
