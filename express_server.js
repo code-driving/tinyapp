@@ -24,7 +24,7 @@ app.set("view engine", "ejs");
 //import the helper functions
 const {
   generateRandomString,
-  checkUserByEmail,
+  getUserByEmail,
   authUserByEmailAndPassword,
   createUser,
   urlsForUser,
@@ -90,7 +90,7 @@ app.post("/register", (req, res) => {
   //extract the information from the form
   const { email, password } = req.body;
   //check by email if the user already exists
-  const userExists = checkUserByEmail(email);
+  const userExists = getUserByEmail(email, users);
   //if the user was not found => create a new one
   if (email === "") {
     res.status(400).send("Error: Please enter your email");
