@@ -162,17 +162,31 @@ app.get("/u/:shortURL", (req, res) => {
   res.redirect(newLongURL);
 });
 
+
 app.get("/urls/:shortURL", (req, res) => {
   const newUserId = req.cookies["user_id"];
   const user = users[newUserId];
-  //create templateVars
+  const userUrls = urlsForUser(newUserId, urlDatabase);
+  const shortURL = req.params.shortURL;
+  const longURL = userUrls[shortURL]['longURL']
+  // console.log(longURL)
   const templateVars = {
-    shortURL: req.params.shortURL,
-    longURL: urlDatabase[req.params.shortURL],
-    user,
+    shortURL, longURL, user 
   };
+  console.log(templateVars)
   res.render("urls_show", templateVars);
 });
+// app.get("/urls/:shortURL", (req, res) => {
+//   const newUserId = req.cookies["user_id"];
+//   const user = users[newUserId];
+//   //create templateVars
+//   const templateVars = {
+//     shortURL: req.params.shortURL,
+//     longURL: urlDatabase[req.params.shortURL],
+//     user,
+//   };
+//   res.render("urls_show", templateVars);
+// });
 
 //delete URLs
 app.post("/urls/:shortURL/delete", (req, res) => {
