@@ -205,10 +205,10 @@ app.post("/urls/:shortURL", (req, res) => {
   //set cookies
   const newUserId = req.session["user_id"];
   const user = users[newUserId];
-  //update the url in the database
   if (!verifyID(newUserId, shortURL, urlDatabase)) {
     res.status(401).send("Sorry. You cannot update it.");
   }
+  //update the url in the database
   urlDatabase[shortURL]["longURL"] = longURL;
   //redirect the client to the urls_index page
   res.redirect("/urls");
