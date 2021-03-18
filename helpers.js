@@ -42,12 +42,10 @@ const createUser = (email, password) => {
   const newUser = {
     id,
     email,
-    password: bcrypt.hashSync(password, saltRounds),
+    password: bcrypt.hashSync(password, saltRounds)
   };
   //add new user to a database
   users[id] = newUser;
-  // console.log("newUser", newUser)
-  // console.log("users", users)
   return newUser;
 };
 
@@ -73,5 +71,5 @@ module.exports = {
   authUserByEmailAndPassword,
   createUser,
   urlsForUser,
-  verifyID,
+  verifyID
 };
