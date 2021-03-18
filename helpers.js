@@ -1,4 +1,4 @@
-const bcrypt = require('bcrypt');
+const bcrypt = require("bcrypt");
 const saltRounds = 10;
 const { urlDatabase, users } = require("./constants");
 
@@ -42,7 +42,7 @@ const createUser = (email, password) => {
   const newUser = {
     id,
     email,
-    password: bcrypt.hashSync(password, saltRounds)
+    password: bcrypt.hashSync(password, saltRounds),
   };
   //add new user to a database
   users[id] = newUser;
@@ -73,5 +73,5 @@ module.exports = {
   authUserByEmailAndPassword,
   createUser,
   urlsForUser,
-  verifyID
+  verifyID,
 };
