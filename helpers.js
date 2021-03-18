@@ -1,4 +1,4 @@
-const { urlDatabase, usersList, users } = require("./constants");
+const { urlDatabase, users } = require("./constants");
 
 const generateRandomString = (urlLength) => {
   let result = "";
@@ -10,10 +10,6 @@ const generateRandomString = (urlLength) => {
     );
   }
   return result;
-};
-
-const updateURL = (id, newValue) => {
-  urlDatabase[id] = newValue;
 };
 
 const checkUserByEmail = (email) => {
@@ -50,30 +46,27 @@ const createUser = (email, password) => {
   users[id] = newUser;
   return id;
 };
-
-
 //return the URLs where the userID is equal to the id of the currently logged-in user
 const urlsForUser = (id, database) => {
-  let usersOwnUrls = {}
+  let usersOwnUrls = {};
   let loggedInUserId = id;
   for (let prop in database) {
     if (database[prop].userID === loggedInUserId) {
-      usersOwnUrls[prop] = database[prop]
+      usersOwnUrls[prop] = database[prop];
     }
   }
   return usersOwnUrls;
 };
 
-const verifyID = (userID, urlID, database) => {
-  return userID === database[urlID].userID
-}
+const verifyID = (userID, shortURL, database) => {
+  return userID === database[shortURL].userID;
+};
 
 module.exports = {
   generateRandomString,
-  updateURL,
   checkUserByEmail,
   authUserByEmailAndPassword,
   createUser,
   urlsForUser,
-  verifyID
+  verifyID,
 };
