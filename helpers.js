@@ -14,10 +14,10 @@ const generateRandomString = (urlLength) => {
   return result;
 };
 
-const checkUserByEmail = (email) => {
+const getUserByEmail = (email, database) => {
   //loop through the users object and check if the email provided in the form corresponds to the email in the database
-  for (let userId in users) {
-    const currentUser = users[userId];
+  for (let userId in database) {
+    const currentUser = database[userId];
     if (currentUser.email === email) {
       return currentUser;
     }
@@ -29,7 +29,7 @@ const authUserByEmailAndPassword = (email, password) => {
   //fetch an user with existing registered email
   //check if the user exists &&
   //check if the the password of the found user in the database corresponds to the password provided in the form
-  const currentUser = checkUserByEmail(email);
+  const currentUser = getUserByEmail(email, database);
   if (currentUser && currentUser.password === password) {
     return currentUser;
   }
