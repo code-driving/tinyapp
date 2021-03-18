@@ -30,6 +30,7 @@ const {
   urlsForUser,
   verifyID,
 } = require("./helpers");
+
 //import databases
 const { urlDatabase, users } = require("./constants");
 
@@ -119,7 +120,7 @@ app.get("/urls", (req, res) => {
   const newUserId = req.session["user_id"];
   const user = users[newUserId];
   const userUrls = urlsForUser(newUserId, urlDatabase);
-  const templateVars = { urls: userUrls, user: newUserId };
+  const templateVars = { urls: userUrls, user: user };
   // check if the user is logged in
   if (!user) {
     return res.render("error", templateVars);
