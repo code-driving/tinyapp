@@ -52,4 +52,17 @@ const createUser = (email, password) => {
   return id;
 };
 
-module.exports = { generateRandomString, updateURL, checkUserByEmail, authUserByEmailAndPassword, createUser } ;
+//return the URLs where the userID is equal to the id of the currently logged-in user
+const urlsForUser = (id, database) => {
+  let usersOwnUrls = {}
+  let loggedInUserId = id;
+  for (let prop in database) {
+    if (database[prop].userID === loggedInUserId) {
+      usersOwnUrls[prop] = database[prop]
+    }
+  }
+  return usersOwnUrls;
+};
+
+
+module.exports = { generateRandomString, updateURL, checkUserByEmail, authUserByEmailAndPassword, createUser, urlsForUser } ;
