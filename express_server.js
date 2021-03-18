@@ -3,11 +3,11 @@ const app = express();
 const PORT = 8080; // default port 8080
 const path = require("path");
 const bodyParser = require("body-parser");
+const bcrypt = require('bcrypt');
 const cookieParser = require("cookie-parser");
 const { render } = require("ejs");
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
-// app.use(express.static("public"));
 app.use(express.static(path.join(__dirname, 'public')))
 
 // set the view engine to ejs
@@ -63,8 +63,10 @@ app.post("/login", (req, res) => {
     //   );
     res.render("error", templateVars);
   }
-  res.cookie("user_id", user.id);
-  res.redirect("/urls");
+  if (user && bcrypt.compareSync(password, user.password)) {
+    res.cookie("user_id", user.id);
+    res.redirect("/urls");
+  }
 });
 
 //show the register page
@@ -91,10 +93,14 @@ app.post("/register", (req, res) => {
   if (userExists) {
     res.status(400).send("This username is already registered");
   }
-  const newUserId = createUser(email, password);
-  //set cookie
-  res.cookie("user_id", newUserId);
-  res.redirect("/urls");
+  const newUser = createUser(email, password);
+  // const newUser = createNewUser(email, password);
+  if (newUser && bcrypt.compareSync(password, newUser.password)) {
+    //set cookie
+    res.cookie("user_id", newUser.id);
+    
+    res.redirect("/urls");
+  }
 });
 
 app.post("/logout", (req, res) => {
