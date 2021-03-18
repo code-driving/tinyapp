@@ -46,7 +46,7 @@ app.post("/login", (req, res) => {
   const { email, password } = req.body;
   //perform the authentication of the user
   const user = authUserByEmailAndPassword(email, password);
-  const templateVars = { user: user };
+  const templateVars = { user };
   if (email === "") {
     res.status(400).send("Error: Please enter your email");
   }
@@ -112,17 +112,6 @@ app.get("/urls", (req, res) => {
     res.render("urls_index", templateVars);
   }
 });
-// app.get("/urls", (req, res) => {
-//   const newUserId = req.cookies["user_id"];
-//   const user = users[newUserId];
-//   const templateVars = { urls: urlDatabase, user };
-//   // check if the user is logged in
-//   if (newUserId) {
-//     res.render("urls_index", templateVars);
-//   } else {
-//     res.render("error", templateVars);
-//   }
-// });
 
 //show the url submission form
 app.get("/urls/new", (req, res) => {
@@ -162,7 +151,6 @@ app.get("/u/:shortURL", (req, res) => {
   res.redirect(newLongURL);
 });
 
-
 app.get("/urls/:shortURL", (req, res) => {
   const newUserId = req.cookies["user_id"];
   const user = users[newUserId];
@@ -174,17 +162,6 @@ app.get("/urls/:shortURL", (req, res) => {
   };
   res.render("urls_show", templateVars);
 });
-// app.get("/urls/:shortURL", (req, res) => {
-//   const newUserId = req.cookies["user_id"];
-//   const user = users[newUserId];
-//   //create templateVars
-//   const templateVars = {
-//     shortURL: req.params.shortURL,
-//     longURL: urlDatabase[req.params.shortURL],
-//     user,
-//   };
-//   res.render("urls_show", templateVars);
-// });
 
 //delete URLs
 app.post("/urls/:shortURL/delete", (req, res) => {
@@ -218,16 +195,6 @@ app.post("/urls/:shortURL", (req, res) => {
   //redirect the client to the urls_index page
   res.redirect("/urls");
 });
-// app.post("/urls/:shortURL", (req, res) => {
-//   //get the value of the id from req.params
-//   const shortURL = req.params.shortURL;
-//   //get the value of longURL from the input from req.body
-//   const longURL = req.body.longURL;
-//   //update the url in the database
-//   updateURL(shortURL, longURL);
-//   //redirect the client to the urls_index page
-//   res.redirect("/urls");
-// });
 
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}!`);
