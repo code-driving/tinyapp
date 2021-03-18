@@ -1,12 +1,14 @@
 const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
+const path = require("path");
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const { render } = require("ejs");
 app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static("public"));
+// app.use(express.static("public"));
+app.use(express.static(path.join(__dirname, 'public')))
 
 // set the view engine to ejs
 app.set("view engine", "ejs");
@@ -171,7 +173,7 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   const shortURL = req.params.shortURL;
   //delete it from the user's urls
   if (!verifyID(newUserId, shortURL, urlDatabase)) {
-    res.status(403).send('Unfortunately, this does not belong to you. You cannot delete it.')
+    res.status(401).send('Sorry. You cannot delete it.')
   }
   delete urlDatabase[shortURL];
   //redirect the client to the urls_index page
@@ -189,7 +191,7 @@ app.post("/urls/:shortURL", (req, res) => {
   const user = users[newUserId];
   //update the url in the database
   if (!verifyID(newUserId, shortURL, urlDatabase)) {
-    res.status(403).send('Unfortunately, this does not belong to you. You cannot update it.')
+    res.status(401).send('Sorry. You cannot update it.')
   }
   urlDatabase[shortURL]['longURL'] = longURL;
   //redirect the client to the urls_index page
