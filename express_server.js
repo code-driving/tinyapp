@@ -41,6 +41,7 @@ app.get("/", (req, res) => {
   }
   res.redirect("/login");
 });
+
 //show the login page
 app.get("/login", (req, res) => {
   const newUserId = req.session["user_id"];
@@ -49,31 +50,33 @@ app.get("/login", (req, res) => {
   res.render("login_page", templateVars);
 });
 
-//create login handler
+// app.post("/login", (req, res) => {
+//   const { email, password } = req.body;
+//   //check if the user email exists in the database
+//   const user = getUserByEmail(email, users);
+//   // const templateVars = { user }
+//   if (user && bcrypt.compareSync(password, user.password)) {
+//     req.session['user_id'] = user.id;
+//     res.redirect('/urls');
+//   } else {
+//     res.status(401).send('DO NOT GIVE UP');
+//   }
+// });
+
 app.post("/login", (req, res) => {
-  //extract the information from the form
   const { email, password } = req.body;
-  //perform the authentication of the user
-  const user = authUserByEmailAndPassword(email, password);
-  const templateVars = { user };
-  if (email === "") {
+  //check if the user email exists in the database
+  const user = getUserByEmail(email, users);
+  // const templateVars = { user }
+  if (user && bcrypt.compareSync(password, user.password)) {
+    req.session['user_id'] = user.id;
+    res.redirect('/urls');
+  } else if (email === "") {
     res.status(400).send("Error: Please enter your email");
-  }
-  if (password === "") {
+  } else if (password === "") {
     res.status(400).send("Error: Please enter your password");
   }
-  if (!user) {
-    // res
-    //   .status(403)
-    //   .send(
-    //     "The user with the provided email or password cannot be found. Please try again."
-    //   );
-    res.render("error", templateVars);
-  }
-  if (user && bcrypt.compareSync(password, user.password)) {
-    req.session.user_id = user.id;
-    res.redirect("/urls");
-  }
+  res.render("error", templateVars);
 });
 
 //show the register page
@@ -91,6 +94,14 @@ app.post("/register", (req, res) => {
   //check by email if the user already exists
   const userExists = getUserByEmail(email, users);
   //if the user was not found => create a new one
+  const newUser = createUser(email, password);
+  // const newUser = createNewUser(email, password);
+  if (newUser && bcrypt.compareSync(password, newUser.password)) {
+    //set cookie
+    req.session.user_id = newUser.id;
+    res.redirect("/urls");
+    return;
+  }
   if (email === "") {
     res.status(400).send("Error: Please enter your email");
   }
@@ -99,13 +110,6 @@ app.post("/register", (req, res) => {
   }
   if (userExists) {
     res.status(400).send("This username is already registered");
-  }
-  const newUser = createUser(email, password);
-  // const newUser = createNewUser(email, password);
-  if (newUser && bcrypt.compareSync(password, newUser.password)) {
-    //set cookie
-    req.session.user_id = newUser.id;
-    res.redirect("/urls");
   }
 });
 
