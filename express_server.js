@@ -4,16 +4,14 @@ const PORT = 8080; // default port 8080
 const path = require("path");
 const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
-// const cookieParser = require("cookie-parser");
 const cookieSession = require("cookie-session");
 const { render } = require("ejs");
 
-// app.use(cookieParser());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(
   cookieSession({
-    name: 'session',
+    name: "session",
     keys: ["user_id"],
   })
 );
@@ -112,7 +110,7 @@ app.post("/register", (req, res) => {
 });
 
 app.post("/logout", (req, res) => {
-  req.session['user_id'] = null;
+  req.session["user_id"] = null;
   res.redirect("/urls");
 });
 
@@ -170,6 +168,10 @@ app.get("/u/:shortURL", (req, res) => {
 app.get("/urls/:shortURL", (req, res) => {
   const newUserId = req.session["user_id"];
   const user = users[newUserId];
+  if (!user) {
+    res.redirect("/login");
+    return;
+  }
   const userUrls = urlsForUser(newUserId, urlDatabase);
   const shortURL = req.params.shortURL;
   const longURL = userUrls[shortURL]["longURL"];
