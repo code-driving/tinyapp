@@ -169,7 +169,7 @@ app.get("/urls/:shortURL", (req, res) => {
   const newUserId = req.session["user_id"];
   const user = users[newUserId];
   if (!user) {
-    res.redirect("/login");
+    res.redirect("/register");
     return;
   }
   const userUrls = urlsForUser(newUserId, urlDatabase);
