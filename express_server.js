@@ -50,24 +50,11 @@ app.get("/login", (req, res) => {
   res.render("login_page", templateVars);
 });
 
-// app.post("/login", (req, res) => {
-//   const { email, password } = req.body;
-//   //check if the user email exists in the database
-//   const user = getUserByEmail(email, users);
-//   // const templateVars = { user }
-//   if (user && bcrypt.compareSync(password, user.password)) {
-//     req.session['user_id'] = user.id;
-//     res.redirect('/urls');
-//   } else {
-//     res.status(401).send('DO NOT GIVE UP');
-//   }
-// });
-
 app.post("/login", (req, res) => {
   const { email, password } = req.body;
   //check if the user email exists in the database
   const user = getUserByEmail(email, users);
-  // const templateVars = { user }
+  const templateVars = { user }
   if (user && bcrypt.compareSync(password, user.password)) {
     req.session['user_id'] = user.id;
     res.redirect('/urls');
