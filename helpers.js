@@ -66,22 +66,11 @@ const verifyID = (userID, shortURL, database) => {
   return userID === database[shortURL].userID;
 };
 
-//check if username is available
-const isAvailable = (newData, database) => {
-  for (let user in database) {
-    if (database[user].email === newData) {
-      return false;
-    }
-  }
-  return true;
-}
-
 module.exports = {
   generateRandomString,
   getUserByEmail,
   authUserByEmailAndPassword,
   createUser,
   urlsForUser,
-  verifyID,
-  isAvailable
+  verifyID
 };
