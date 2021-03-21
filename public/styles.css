@@ -13,6 +13,9 @@ html { -moz-box-sizing: border-box; -webkit-box-sizing: border-box; box-sizing: 
   --button-color: #212529;
   --button-hover-state: rgb(15, 67, 97);
 }
+h4, h5 {
+  line-height: 2rem;
+}
 ul li {
   list-style: none;
 }
@@ -38,6 +41,39 @@ body {
   color: black;
   text-transform: uppercase;
 }
+.error {
+  text-align: center;
+  padding: 1rem;
+  line-height: 150%;
+}
+.error h4 {
+  padding: 2rem 0 2rem 0;
+  font-weight: bold;
+}
+.fun {
+  margin-top: 0.7rem;
+}
+
+.error ul {
+  display: flex;
+  text-align: center;
+  justify-content: space-evenly;
+  margin-top: 0.3rem;
+}
+.error ul a {
+  background-color:  rgb(230, 213, 161);
+  color: var(--button-color);
+  display: inline-block;
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+.error ul a:hover,
+.error ul a:focus {
+  background-color: var(--button-hover-state);
+  color:aliceblue;
+}
+
 a:link {
   font-weight: bold;
   text-decoration: none;
