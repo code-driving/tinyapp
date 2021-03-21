@@ -27,8 +27,7 @@ const {
   createUser,
   authUserByEmailAndPassword,
   urlsForUser,
-  verifyID,
-  isAvailable,
+  verifyID
 } = require("./helpers");
 
 //import databases
@@ -107,7 +106,7 @@ app.post("/login", (req, res) => {
     req.session["user_id"] = user.id;
     res.redirect("/urls");
   } else {
-    res.status(401).send("Your email and password do not match");
+    res.status(401).send("Please go back and make sure that you registered first. If you did - your email and password do not match.");
   }
 });
 
