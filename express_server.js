@@ -68,8 +68,7 @@ app.post("/register", (req, res) => {
   } else if (password === "") {
     res.status(400).send("Please enter your password");
   } else if (userExists) {
-    // res.status(400).send("This email is already registered");
-    res.render("error_message");
+    res.status(400).send("This email is already registered");
   } else {
     const user = createUser(email, password);
     req.session["user_id"] = user;
