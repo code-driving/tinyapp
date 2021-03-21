@@ -72,5 +72,6 @@ module.exports = {
   authUserByEmailAndPassword,
   createUser,
   urlsForUser,
-  verifyID
+  verifyID,
+
 };
