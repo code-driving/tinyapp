@@ -166,46 +166,37 @@ app.get("/urls/:shortURL", (req, res) => {
   const shortURL = req.params.shortURL;
 
   if (urlDatabase[shortURL]) {
-      if (user.id !== urlDatabase[shortURL].userID) {
-        res.send("This URL does not belong to you");
-      } else {
-        const longURL = userUrls[shortURL]["longURL"];
-        const templateVars = {
-          shortURL,
-          longURL,
-          user
-        };
-        res.render("urls_show", templateVars);
-      }
+    if (newUserId !== urlDatabase[shortURL].userID) {
+      res.send("This URL does not belong to you");
     } else {
-    res.send("This url does not exist");
+      const longURL = userUrls[shortURL]["longURL"];
+      const templateVars = {
+        shortURL,
+        longURL,
+        user,
+      };
+      res.render("urls_show", templateVars);
+    }
+  } else {
+    res.send("This URL does not exist");
   }
 });
-// app.get("/urls/:shortURL", (req, res) => {
-//   const newUserId = req.session["user_id"];
-//   const user = users[newUserId];
-//   if (!user) {
-//     res.redirect("/register");
-//     return;
-//   }
-//   const userUrls = urlsForUser(newUserId, urlDatabase);
-//   const shortURL = req.params.shortURL;
-//   const longURL = userUrls[shortURL]["longURL"];
-//   const templateVars = {
-//     shortURL,
-//     longURL,
-//     user,
-//   };
-//   res.render("urls_show", templateVars);
-// });
 
 app.get("/u/:shortURL", (req, res) => {
+  const newUserId = req.session["user_id"];
+  const user = users[newUserId];
   //get the value of the shortURL from req.params
   const shortURL = req.params.shortURL;
-  //retrieve the value of the longURL from the database object
-  const newLongURL = urlDatabase[shortURL].longURL;
-  //redirect the client to the longURL webpage
-  res.redirect(newLongURL);
+  if (urlDatabase[shortURL]) {
+    if (newUserId === urlDatabase[shortURL].userID) {
+      //retrieve the value of the longURL from the database object
+      const newLongURL = urlDatabase[shortURL].longURL;
+      //redirect the client to the longURL webpage
+      res.redirect(newLongURL);
+    }
+  } else {
+    res.status(404).send("This URL does not exist");
+  }
 });
 
 //delete URLs
@@ -214,13 +205,16 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   const user = users[newUserId];
   //get the value of the shortURL  from req.params
   const shortURL = req.params.shortURL;
-  //delete it from the user's urls
-  if (!verifyID(newUserId, shortURL, urlDatabase)) {
-    res.status(401).send("Sorry. You cannot delete it.");
+  if (urlDatabase[shortURL]) {
+    if (!verifyID(newUserId, shortURL, urlDatabase)) {
+      res.status(401).send("This is not your URL. You cannot delete it.");
+    } else {
+      //delete URL from the user's urls
+      delete urlDatabase[shortURL];
+      //redirect the client to the urls_index page
+      res.redirect("/urls");
+    }
   }
-  delete urlDatabase[shortURL];
-  //redirect the client to the urls_index page
-  res.redirect("/urls");
 });
 
 //update a URL recourse
@@ -232,13 +226,16 @@ app.post("/urls/:shortURL", (req, res) => {
   //set cookies
   const newUserId = req.session["user_id"];
   const user = users[newUserId];
-  if (!verifyID(newUserId, shortURL, urlDatabase)) {
-    res.status(401).send("Sorry. You cannot update it.");
+  if (urlDatabase[shortURL]) {
+    if (!verifyID(newUserId, shortURL, urlDatabase)) {
+      res.status(401).send("Sorry. You cannot update it.");
+    } else {
+      //update the url in the database
+      urlDatabase[shortURL]["longURL"] = longURL;
+      //redirect the client to the urls_index page
+      res.redirect("/urls");
+    }
   }
-  //update the url in the database
-  urlDatabase[shortURL]["longURL"] = longURL;
-  //redirect the client to the urls_index page
-  res.redirect("/urls");
 });
 
 app.listen(PORT, () => {
