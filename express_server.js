@@ -1,19 +1,21 @@
 const express = require("express");
-const app = express();
-const PORT = 8080; // default port 8080
 const path = require("path");
 const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 const cookieSession = require("cookie-session");
+const { render } = require("ejs");
 
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(express.static(path.join(__dirname, "public")));
+const PORT = process.env.PORT || 8080; 
+const app = express();
+
 app.use(
   cookieSession({
     name: "session",
     keys: ["user_id"],
   })
 );
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.static(path.join(__dirname, "public")));
 
 // set the view engine to ejs
 app.set("view engine", "ejs");
@@ -23,53 +25,48 @@ const {
   generateRandomString,
   getUserByEmail,
   createUser,
+  authUserByEmailAndPassword,
   urlsForUser,
   verifyID,
+  isAvailable
 } = require("./helpers");
 
 //import databases
 const { urlDatabase, users } = require("./constants");
+
+//create a middleware function
+const setUser = (req, res, next) => {
+  const newUserId = req.session["user_id"];
+  const userObj = users[newUserId] || null;
+  req.user = userObj;
+  
+  next();
+};
+
+app.use(setUser);
 
 app.get("/", (req, res) => {
   const newUserId = req.session["user_id"];
   const user = users[newUserId];
   if (user) {
     res.redirect("/urls");
-    return;
+  } else {
+    const templateVars = { user }
+    res.render("login_page", templateVars);
   }
-  res.redirect("/login");
-});
-
-//show the login page
-app.get("/login", (req, res) => {
-  const newUserId = req.session["user_id"];
-  const user = users[newUserId];
-  const templateVars = { user };
-  res.render("login_page", templateVars);
-});
-
-app.post("/login", (req, res) => {
-  const { email, password } = req.body;
-  //check if the user email exists in the database
-  const user = getUserByEmail(email, users);
-  const templateVars = { user }
-  if (user && bcrypt.compareSync(password, user.password)) {
-    req.session['user_id'] = user.id;
-    res.redirect('/urls');
-  } else if (email === "") {
-    res.status(400).send("Error: Please enter your email");
-  } else if (password === "") {
-    res.status(400).send("Error: Please enter your password");
-  }
-  res.render("error", templateVars);
 });
 
 //show the register page
 app.get("/register", (req, res) => {
   const newUserId = req.session["user_id"];
   const user = users[newUserId];
-  const templateVars = { user };
-  res.render("registration_page", templateVars);
+  if (user) {
+    res.redirect('/urls');
+  } else {
+    const templateVars = { user };
+    res.render("registration_page", templateVars);
+  }
+  // const templateVars = { user: null };
 });
 
 //create registration handler
@@ -78,30 +75,52 @@ app.post("/register", (req, res) => {
   const { email, password } = req.body;
   //check by email if the user already exists
   const userExists = getUserByEmail(email, users);
-  //if the user was not found => create a new one
-  const newUser = createUser(email, password);
-  // const newUser = createNewUser(email, password);
-  if (newUser && bcrypt.compareSync(password, newUser.password)) {
-    //set cookie
-    req.session.user_id = newUser.id;
-    res.redirect("/urls");
-    return;
-  }
   if (email === "") {
-    res.status(400).send("Error: Please enter your email");
-  }
-  if (password === "") {
-    res.status(400).send("Error: Please enter your password");
-  }
-  if (userExists) {
-    res.status(400).send("This username is already registered");
+    res.status(400).send("Please enter your email");
+  } else if (password === "") {
+    res.status(400).send("Please enter your password");
+  } else if (userExists) {
+    res.status(400).send("This email is already registered")
+  } else {
+    const user = createUser(email, password);
+    req.session["user_id"] = user;
+    res.redirect("/urls");
   }
 });
+  
+  
+
+//show the login page
+app.get("/login", (req, res) => {
+  const newUserId = req.session["user_id"];
+  const user = users[newUserId];
+  if (user) {
+    res.redirect("/urls")
+  } else {
+    const templateVars = { user };
+    res.render("login_page", templateVars);
+  }
+});
+
+
+
+app.post("/login", (req, res) => {
+  const { email, password } = req.body;
+  const user = authUserByEmailAndPassword(email, password);
+  if (user) {
+    req.session["user_id"] = user.id;
+    res.redirect("/urls");
+  } else {
+    res.status(401).send("Your email and password do not match");
+  }
+});
+
 
 app.post("/logout", (req, res) => {
   req.session["user_id"] = null;
   res.redirect("/urls");
 });
+
 
 app.get("/urls", (req, res) => {
   const newUserId = req.session["user_id"];
@@ -114,18 +133,6 @@ app.get("/urls", (req, res) => {
   } else {
     res.render("urls_index", templateVars);
   }
-});
-
-//show the url submission form
-app.get("/urls/new", (req, res) => {
-  const newUserId = req.session["user_id"];
-  const user = users[newUserId];
-  const templateVars = { user };
-  if (!user) {
-    res.redirect("/login");
-    return;
-  }
-  res.render("urls_new", templateVars);
 });
 
 //receive the form submission
@@ -145,14 +152,19 @@ app.post("/urls", (req, res) => {
   res.redirect(`/urls/${shortURL}`);
 });
 
-app.get("/u/:shortURL", (req, res) => {
-  //get the value of the shortURL from req.params
-  const shortURL = req.params.shortURL;
-  //retrieve the value of the longURL from the database object
-  const newLongURL = urlDatabase[shortURL].longURL;
-  //redirect the client to the longURL webpage
-  res.redirect(newLongURL);
+//show the url submission form
+
+app.get("/urls/new", (req, res) => {
+  const newUserId = req.session["user_id"];
+  const user = users[newUserId];
+  if (!user) {
+    res.redirect("/login");
+    return;
+  }
+  const templateVars = { user };
+  res.render("urls_new", templateVars);
 });
+
 
 app.get("/urls/:shortURL", (req, res) => {
   const newUserId = req.session["user_id"];
@@ -171,6 +183,16 @@ app.get("/urls/:shortURL", (req, res) => {
   };
   res.render("urls_show", templateVars);
 });
+
+app.get("/u/:shortURL", (req, res) => {
+  //get the value of the shortURL from req.params
+  const shortURL = req.params.shortURL;
+  //retrieve the value of the longURL from the database object
+  const newLongURL = urlDatabase[shortURL].longURL;
+  //redirect the client to the longURL webpage
+  res.redirect(newLongURL);
+});
+
 
 //delete URLs
 app.post("/urls/:shortURL/delete", (req, res) => {
