@@ -1,6 +1,6 @@
 const bcrypt = require("bcrypt");
 const saltRounds = 10;
-const { urlDatabase, users } = require("./constants");
+const { users } = require("./constants");
 
 const generateRandomString = (urlLength) => {
   let result = "";
