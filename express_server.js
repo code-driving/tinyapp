@@ -5,7 +5,6 @@ const path = require("path");
 const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 const cookieSession = require("cookie-session");
-const { render } = require("ejs");
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname, "public")));
@@ -23,7 +22,6 @@ app.set("view engine", "ejs");
 const {
   generateRandomString,
   getUserByEmail,
-  authUserByEmailAndPassword,
   createUser,
   urlsForUser,
   verifyID,
