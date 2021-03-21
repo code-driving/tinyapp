@@ -27,22 +27,11 @@ const {
   createUser,
   authUserByEmailAndPassword,
   urlsForUser,
-  verifyID
+  verifyID,
 } = require("./helpers");
 
 //import databases
 const { urlDatabase, users } = require("./constants");
-
-//create a middleware function
-const setUser = (req, res, next) => {
-  const newUserId = req.session["user_id"];
-  const userObj = users[newUserId] || null;
-  req.user = userObj;
-
-  next();
-};
-
-app.use(setUser);
 
 app.get("/", (req, res) => {
   const newUserId = req.session["user_id"];
@@ -79,7 +68,8 @@ app.post("/register", (req, res) => {
   } else if (password === "") {
     res.status(400).send("Please enter your password");
   } else if (userExists) {
-    res.status(400).send("This email is already registered");
+    // res.status(400).send("This email is already registered");
+    res.render("error_message");
   } else {
     const user = createUser(email, password);
     req.session["user_id"] = user;
@@ -106,7 +96,11 @@ app.post("/login", (req, res) => {
     req.session["user_id"] = user.id;
     res.redirect("/urls");
   } else {
-    res.status(401).send("Please go back and make sure that you registered first. If you did - your email and password do not match.");
+    res
+      .status(401)
+      .send(
+        "Please go back and make sure that you registered first. If you did - your email and password do not match."
+      );
   }
 });
 
