@@ -157,7 +157,7 @@ app.get("/urls/:shortURL", (req, res) => {
 
   if (urlDatabase[shortURL]) {
     if (newUserId !== urlDatabase[shortURL].userID) {
-      res.send("This URL does not belong to you");
+      res.send("This URL does not belong to you. Please log in first if you think this is your URL.");
     } else {
       const longURL = userUrls[shortURL]["longURL"];
       const templateVars = {
@@ -168,7 +168,7 @@ app.get("/urls/:shortURL", (req, res) => {
       res.render("urls_show", templateVars);
     }
   } else {
-    res.send("This URL does not exist");
+    res.send("This URL does not exist.");
   }
 });
 
@@ -185,7 +185,7 @@ app.get("/u/:shortURL", (req, res) => {
       res.redirect(newLongURL);
     }
   } else {
-    res.status(404).send("This URL does not exist");
+    res.status(404).send("This URL does not exist.");
   }
 });
 
@@ -197,7 +197,7 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   const shortURL = req.params.shortURL;
   if (urlDatabase[shortURL]) {
     if (!verifyID(newUserId, shortURL, urlDatabase)) {
-      res.status(401).send("This is not your URL. You cannot delete it.");
+      res.status(401).send("This is not your URL. You cannot delete it. If you think this is your URL please log in first.");
     } else {
       //delete URL from the user's urls
       delete urlDatabase[shortURL];
