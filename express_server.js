@@ -157,7 +157,9 @@ app.get("/urls/:shortURL", (req, res) => {
 
   if (urlDatabase[shortURL]) {
     if (newUserId !== urlDatabase[shortURL].userID) {
-      res.send("This URL does not belong to you. Please log in first if you think this is your URL.");
+      res.send(
+        "This URL does not belong to you. Please log in first if you think this is your URL."
+      );
     } else {
       const longURL = userUrls[shortURL]["longURL"];
       const templateVars = {
@@ -172,29 +174,13 @@ app.get("/urls/:shortURL", (req, res) => {
   }
 });
 
-// app.get("/u/:shortURL", (req, res) => {
-//   const shortURL = req.params.shortURL;
-//   if (urlDatabase[shortURL].longURL === undefined) {
-//     res.status(404);
-//     return res.render('error error');
-//   } else {
-//     res.redirect(urlDatabase[shortURL].longURL);
-//   }
-// });
+
 app.get("/u/:shortURL", (req, res) => {
-  const newUserId = req.session["user_id"];
-  const user = users[newUserId];
-  //get the value of the shortURL from req.params
   const shortURL = req.params.shortURL;
-    if (urlDatabase[shortURL]) {
-      if (newUserId === urlDatabase[shortURL].userID) {
-        //retrieve the value of the longURL from the database object
-        const newLongURL = urlDatabase[shortURL].longURL;
-        //redirect the client to the longURL webpage
-        res.redirect(newLongURL);
-      }
-    } else {
-    res.status(404).send("This URL does not exist.");
+  if (urlDatabase[shortURL].longURL === undefined) {
+    res.status(404).send("This URL doe not exist")
+  } else {
+    res.redirect(urlDatabase[shortURL].longURL);
   }
 });
 
@@ -206,7 +192,11 @@ app.post("/urls/:shortURL/delete", (req, res) => {
   const shortURL = req.params.shortURL;
   if (urlDatabase[shortURL]) {
     if (!verifyID(newUserId, shortURL, urlDatabase)) {
-      res.status(401).send("This is not your URL. You cannot delete it. If you think this is your URL please log in first.");
+      res
+        .status(401)
+        .send(
+          "This is not your URL. You cannot delete it. If you think this is your URL please log in first."
+        );
     } else {
       //delete URL from the user's urls
       delete urlDatabase[shortURL];
