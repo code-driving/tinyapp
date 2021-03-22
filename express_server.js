@@ -172,19 +172,32 @@ app.get("/urls/:shortURL", (req, res) => {
   }
 });
 
+// app.get("/u/:shortURL", (req, res) => {
+//   const shortURL = req.params.shortURL;
+//   if (urlDatabase[shortURL].longURL === undefined) {
+//     res.status(404);
+//     return res.render('error error');
+//   } else {
+//     res.redirect(urlDatabase[shortURL].longURL);
+//   }
+// });
 app.get("/u/:shortURL", (req, res) => {
   const newUserId = req.session["user_id"];
   const user = users[newUserId];
   //get the value of the shortURL from req.params
   const shortURL = req.params.shortURL;
-  if (urlDatabase[shortURL]) {
-    if (newUserId === urlDatabase[shortURL].userID) {
-      //retrieve the value of the longURL from the database object
-      const newLongURL = urlDatabase[shortURL].longURL;
-      //redirect the client to the longURL webpage
-      res.redirect(newLongURL);
-    }
+  if (urlDatabase[shortURL].longURL === undefined) {
+        res.status(404);
   } else {
+    if (urlDatabase[shortURL]) {
+      if (newUserId === urlDatabase[shortURL].userID) {
+        //retrieve the value of the longURL from the database object
+        const newLongURL = urlDatabase[shortURL].longURL;
+        //redirect the client to the longURL webpage
+        res.redirect(newLongURL);
+      }
+    } else {
+  }
     res.status(404).send("This URL does not exist.");
   }
 });
