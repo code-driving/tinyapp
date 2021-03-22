@@ -3,7 +3,7 @@ const path = require("path");
 const bodyParser = require("body-parser");
 const bcrypt = require("bcrypt");
 const cookieSession = require("cookie-session");
-const { render } = require("ejs");
+// const { render } = require("ejs");
 
 const PORT = process.env.PORT || 8080;
 const app = express();
@@ -54,7 +54,6 @@ app.get("/register", (req, res) => {
     const templateVars = { user };
     res.render("registration_page", templateVars);
   }
-  // const templateVars = { user: null };
 });
 
 //create registration handler
@@ -139,7 +138,6 @@ app.post("/urls", (req, res) => {
 });
 
 //show the url submission form
-
 app.get("/urls/new", (req, res) => {
   const newUserId = req.session["user_id"];
   const user = users[newUserId];
