@@ -186,9 +186,6 @@ app.get("/u/:shortURL", (req, res) => {
   const user = users[newUserId];
   //get the value of the shortURL from req.params
   const shortURL = req.params.shortURL;
-  if (urlDatabase[shortURL].longURL === undefined) {
-        res.status(404);
-  } else {
     if (urlDatabase[shortURL]) {
       if (newUserId === urlDatabase[shortURL].userID) {
         //retrieve the value of the longURL from the database object
@@ -197,7 +194,6 @@ app.get("/u/:shortURL", (req, res) => {
         res.redirect(newLongURL);
       }
     } else {
-  }
     res.status(404).send("This URL does not exist.");
   }
 });
